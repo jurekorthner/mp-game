@@ -1,40 +1,42 @@
-const path = require("path");
-const fs = require("fs");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const appDirectory = fs.realpathSync(process.cwd());
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-    entry: path.resolve(appDirectory, "./src/app.ts"), //path to the main .ts file
-    output: {
-        filename: "js/bundleName.js", //name for the js file that is created/compiled in memory
-        clean: true,
-    },
-    resolve: {
-        extensions: [".tsx", ".ts", ".js"],
-    },
+    mode: "development",
+    entry: './src/index.ts',
+    devtool: 'inline-source-map',
     devServer: {
-        host: "0.0.0.0",
-        port: 8080, //port that we're using for local host (localhost:8080)
-        static: path.resolve(appDirectory, "public"), //tells webpack to serve from the public folder
-        hot: true,
-        devMiddleware: {
-            publicPath: "/",
-        }
+        static: './dist',
     },
     module: {
-        rules: [
+        rules: [{
+                test: /\.obj$/,
+                use: 'file-loader',                
+            },
+            {
+                test: /\.(gltf|glb)$/,
+                use: 'file-loader',
+            },
             {
                 test: /\.tsx?$/,
-                use: "ts-loader",
+                use: 'ts-loader',
                 exclude: /node_modules/,
             },
+            {
+                test: /\.(jpg|png)$/,
+                use: {
+                    loader: 'file-loader',
+                },
+            }
         ],
     },
-    plugins: [
-        new HtmlWebpackPlugin({
-            inject: true,
-            template: path.resolve(appDirectory, "public/index.html"),
-        })
-    ],
-    mode: "development",
+    resolve: {
+        extensions: ['.tsx', '.ts', '.js'],
+    },
+    output: {
+        filename: 'bundle.js',
+        path: path.resolve(__dirname, 'dist'),
+        clean: true,
+    },
+    plugins: [new HtmlWebpackPlugin()],
 };
