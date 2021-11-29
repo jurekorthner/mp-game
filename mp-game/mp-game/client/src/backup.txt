@@ -1,0 +1,36 @@
+import spaceshipModel from "./assets/models/spaceship.glb";
+import { Material, MaterialParameters, Mesh, MeshBasicMaterial, MeshPhongMaterial, MeshPhysicalMaterial, MeshStandardMaterial, SphereGeometry, TextureLoader } from "three";
+
+// --------------------------
+
+const cubeTextureLoader = new THREE.CubeTextureLoader();
+const texture = cubeTextureLoader.load([
+    rightImg,
+    leftImg,
+    topImg,
+    bottomImg,
+    frontImg,
+    backImg,
+]);
+
+scene.background = texture;
+
+// -----------------------
+
+gltfLoader.load(spaceshipModel,
+    function (gltf) {
+        let mesh: Mesh = gltf.scene.children[0] as Mesh;
+
+        console.log(mesh.material)
+        let mat = mesh.material as THREE.MeshStandardMaterial;
+
+
+        scene.add(gltf.scene);
+        console.log('test');
+
+
+    }, undefined, function (error) {
+
+        console.error(error);
+
+    });
